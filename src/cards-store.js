@@ -3,7 +3,7 @@ import { Deck } from 'deckofcards';
 
 function createCard(value) {
     const initialValue = {
-        state: 'revealed',
+        state: 'hidden',
         rank: value[0],
         suit: value[1],
         value
@@ -12,22 +12,27 @@ function createCard(value) {
     const { subscribe, update } = writable(initialValue);
 
     function reveal() {
-        update(state => state.state = 'revealed');
+        let result = false;
+        update(card => {
+            if (card.state == 'hidden') {
+                card.state = 'revealed';
+                result = true;
+            }
+
+            return card;
+        });
+
+        return result;
     }
 
     function hide() {
-        update(state => state.state = 'hidden');
-    }
-
-    function match() {
-        update(state => state.state = 'matched');
+        update(card => ({ ...card, state: 'hidden' }));
     }
 
     return {
         subscribe,
         reveal,
-        hide,
-        match
+        hide
     }
 }
 

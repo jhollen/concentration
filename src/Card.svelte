@@ -5,7 +5,7 @@
 export let card;
 
 $: value = $card.value;
-$: background = $card.hidden ? 'hidden-card' : value;
+$: background = $card.state == 'hidden' ? 'card-back' : value;
 </script>
 <style>
 .card {
