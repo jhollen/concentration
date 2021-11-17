@@ -5,6 +5,7 @@
 </div>
 <script>
 import { cards, allMatched } from './cards-store';
+import { numberOfMoves } from './game-store';
 import Card from './Card.svelte';
 
 const hideDelay = 2000;
@@ -20,6 +21,8 @@ function reveal(card) {
         revealedCards = [...revealedCards, card];
 
         if (revealedCards.length == 2) {
+            numberOfMoves.update(n => n + 1);
+
             const card1 = revealedCards[0];
             const card2 = revealedCards[1];
 
