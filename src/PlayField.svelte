@@ -4,34 +4,34 @@
     {/each}
 </div>
 <script>
-import { get } from 'svelte/store';
-import { cards } from './cards-store';
+import { cards, allMatched } from './cards-store';
 import Card from './Card.svelte';
 
 const hideDelay = 2000;
-let block = false;
 
 let revealedCards = [];
 
+$: block = revealedCards.length == 2 || $allMatched;
+
 function reveal(card) {
-    const revealed = card.reveal();
+    const revealed = cards.Reveal(card);
 
     if (revealed) {
-        revealedCards.push(card);
+        revealedCards = [...revealedCards, card];
 
         if (revealedCards.length == 2) {
-            const card1 = get(revealedCards[0]);
-            const card2 = get(revealedCards[1]);
+            const card1 = revealedCards[0];
+            const card2 = revealedCards[1];
 
             if (!cardsMatch(card1, card2)) {
-                block = true;
-                const cardsToHide = revealedCards;
                 setTimeout(() => {
-                    hideCards(cardsToHide);
+                    hideCards();
+                    revealedCards = [];
                 }, hideDelay);
+            } else {
+                matchCards();
+                revealedCards = [];
             }
-            
-            revealedCards = [];
         }
     }
 }
@@ -44,11 +44,16 @@ function cardsMatch(a, b) {
         a.suit == 'H' && b.suit == 'D');
 }
 
-function hideCards(cardsToHide) {
-    for(const card of cardsToHide) {
-        card.hide();
+function hideCards() {
+    for(const card of revealedCards) {
+        cards.Hide(card);
     }
-    block = false;
+}
+
+function matchCards() {
+    for(const card of revealedCards) {
+        cards.Match(card);
+    }
 }
 </script>
 <style>
