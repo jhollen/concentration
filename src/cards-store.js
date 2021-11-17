@@ -67,7 +67,9 @@ function createCards() {
 
 export const cards = createCards();
 
-export const allMatched = derived(cards, $cards =>
-    $cards.every(card => card.state == 'matched')
+export const matchesRemaining = derived(cards, $cards =>
+    $cards.filter(card => card.state != 'matched').length / 2
 );
+
+export const allMatched = derived(matchesRemaining, x => x == 0);
 
