@@ -40,11 +40,7 @@ function reveal(card) {
 }
 
 function cardsMatch(a, b) {
-    return a.rank == b.rank &&
-        (a.suit == 'C' && b.suit == 'S' ||
-        a.suit == 'S' && b.suit == 'C' ||
-        a.suit == 'D' && b.suit == 'H' ||
-        a.suit == 'H' && b.suit == 'D');
+    return a.value == b.value;
 }
 
 function hideCards() {
